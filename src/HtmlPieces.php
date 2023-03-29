@@ -1,13 +1,14 @@
 <?php
+
 namespace hmerritt;
 
 /**
-*  Class HtmlPieces
-*
-*
-* @package hmerritt/imdb-api
-* @author Harry Merritt
-*/
+ *  Class HtmlPieces
+ *
+ *
+ * @package hmerritt/imdb-api
+ * @author Harry Merritt
+ */
 class HtmlPieces
 {
 
@@ -19,7 +20,7 @@ class HtmlPieces
      * @param string $element
      * @return string
      */
-    public function get(object $page, string $element, string $url='')
+    public function get(object $page, string $element, string $url = '')
     {
         //  Initiate dom object
         //  -> handles page scraping
@@ -133,13 +134,13 @@ class HtmlPieces
                     $href = $trailerLink->getAttribute("href");
                     preg_match("/\/video\/(vi[a-zA-Z0-9]+)/", $href, $matches);
                     $trailerId = $this->count($matches) > 1 ? $matches[1] : "";
-                    $trailerLink = $this->count($trailerId) ? "https://www.imdb.com/video/".$trailerId : "";
+                    $trailerLink = $this->count($trailerId) ? "https://www.imdb.com/video/" . $trailerId : "";
 
                 } elseif ($this->count($trailerLinkOld)) {
                     $trailerId = $this->count($trailerLinkOld) ? $trailerLinkOld->getAttribute("data-video") : "";
-                    $trailerLink = $this->count($trailerId) ? "https://www.imdb.com/video/".$trailerId : "";
+                    $trailerLink = $this->count($trailerId) ? "https://www.imdb.com/video/" . $trailerId : "";
                 } else {
-                    $trailerId   = "";
+                    $trailerId = "";
                     $trailerLink = "";
                 }
 
@@ -156,8 +157,7 @@ class HtmlPieces
 
                 // Use $findAllCastOld
                 if ($this->count($findAllCastOld)) {
-                    foreach ($findAllCastOld as $castRow)
-                    {
+                    foreach ($findAllCastOld as $castRow) {
                         if ($this->count($castRow->find('.primary_photo')) === 0) {
                             continue;
                         }
@@ -179,8 +179,8 @@ class HtmlPieces
                         }
 
                         $actor["character"] = $this->strClean($actor["character"]);
-                        $actor["actor"]     = $this->strClean($actor["actor"]);
-                        $actor["actor_id"]  = $this->strClean($actor["actor_id"]);
+                        $actor["actor"] = $this->strClean($actor["actor"]);
+                        $actor["actor_id"] = $this->strClean($actor["actor_id"]);
 
                         array_push($cast, $actor);
                     }
@@ -188,8 +188,7 @@ class HtmlPieces
 
                 // Use 'new' $findAllCast
                 if ($this->count($findAllCast)) {
-                    foreach ($findAllCast as $castRow)
-                    {
+                    foreach ($findAllCast as $castRow) {
                         if ($this->count($castRow->find('img')) === 0) {
                             continue;
                         }
@@ -235,9 +234,9 @@ class HtmlPieces
                         }
 
                         $actor["character"] = $this->strClean($actor["character"]);
-                        $actor["actor"]     = $this->strClean($actor["actor"]);
-                        $actor["avatar"]    = $this->strClean($actor["avatar"]);
-                        $actor["actor_id"]  = $this->strClean($actor["actor_id"]);
+                        $actor["actor"] = $this->strClean($actor["actor"]);
+                        $actor["avatar"] = $this->strClean($actor["avatar"]);
+                        $actor["actor_id"] = $this->strClean($actor["actor_id"]);
 
                         array_push($cast, $actor);
                     }
@@ -254,12 +253,12 @@ class HtmlPieces
                 $seasons = [];
                 $findAllSeasons = $dom->find($page, "#bySeason > option");
                 $dom = new \PHPHtmlParser\Dom();
-                foreach ($findAllSeasons as $seasonRow){
+                foreach ($findAllSeasons as $seasonRow) {
                     $season = [];
                     $seasonValue = $seasonRow->getAttribute('value');
                     $season['season'] = $seasonValue;
                     // Using imdb ajax api to get episodes
-                    $season['episodes'] = $this->get($dom->loadFromUrl($url."/_ajax?season=".$seasonValue), "episodes");
+                    $season['episodes'] = $this->get($dom->loadFromUrl($url . "/_ajax?season=" . $seasonValue), "episodes");
                     array_push($seasons, $season);
                 }
                 return $seasons;
@@ -268,19 +267,19 @@ class HtmlPieces
             case "episodes":
                 $episodes = [];
                 $findAllEpisodes = $dom->find($page, ".eplist > .list_item");
-                foreach ($findAllEpisodes as $episodeRow){
+                foreach ($findAllEpisodes as $episodeRow) {
                     $episode = [];
                     $hyperlink = $episodeRow->find("a[itemprop=url]");
-                    $episode["id"]          = $this->extractImdbId($hyperlink->getAttribute("href"));
-                    $episode['title']       = $episodeRow->find('a[itemprop=name]')->text;
+                    $episode["id"] = $this->extractImdbId($hyperlink->getAttribute("href"));
+                    $episode['title'] = $episodeRow->find('a[itemprop=name]')->text;
                     $episode['description'] = $episodeRow->find(".item_description")->text;
-                    $rating                 = $episodeRow->find(".ipl-rating-star__rating");
-                    $episode["poster"]      = "";
-                    if($this->count($rating)) {
+                    $rating = $episodeRow->find(".ipl-rating-star__rating");
+                    $episode["poster"] = "";
+                    if ($this->count($rating)) {
                         $episode['rating'] = $rating->text;
                     }
                     $image = $hyperlink->find("img");
-                    if($this->count($image)) {
+                    if ($this->count($image)) {
                         $poster = $image->getAttribute("src");
                         $episode["poster"] = preg_match('/@/', $poster) ? preg_split('~@(?=[^@]*$)~', $poster)[0] . "@.jpg" : $poster;
 
@@ -297,8 +296,7 @@ class HtmlPieces
                 $technical_specs = [];
                 $table = $dom->find($page, '.dataTable tr');
                 if ($this->count($table) > 0) {
-                    foreach ($table as $row)
-                    {
+                    foreach ($table as $row) {
                         $row_title = $row->find('td')[0]->text(true);
                         $row_value = str_replace("  ", " <br> ", $row->find('td')[1]->text(true));
                         $row = [
@@ -317,17 +315,13 @@ class HtmlPieces
             case "companies":
                 $response = [];
                 $sections = $dom->find($page, ".ipc-page-section");
-                if ($this->count($sections) > 0)
-                {
-                    foreach ($sections as $section)
-                    {
+                if ($this->count($sections) > 0) {
+                    foreach ($sections as $section) {
                         $sectionName = @strtolower($dom->find($section, ".ipc-title__text")->text);
                         if ($sectionName === $element) {
                             $sectionRows = $section->find("ul li");
-                            if ($this->count($sectionRows) > 0)
-                            {
-                                foreach ($sectionRows as $sectionRow)
-                                {
+                            if ($this->count($sectionRows) > 0) {
+                                foreach ($sectionRows as $sectionRow) {
                                     $row = [];
 
                                     $link = $dom->find($sectionRow, 'a');
@@ -337,8 +331,7 @@ class HtmlPieces
                                     }
 
                                     $row["image"] = $dom->find($sectionRow, '.ipc-image')->src;
-                                    if (preg_match('/@/', $row["image"]))
-                                    {
+                                    if (preg_match('/@/', $row["image"])) {
                                         $row["image"] = preg_split('~@(?=[^@]*$)~', $row["image"])[0] . "@.jpg";
                                     }
                                     $row["image"] = empty($row["image"]) ? "" : $row["image"];
@@ -353,6 +346,15 @@ class HtmlPieces
                 }
                 return $response;
                 break;
+            case 'countries':
+                $countries = [];
+                $liOfCountries = $dom->find($page, '[li[data-testid="title-details-origin"] > div > ul > li');
+                foreach ($liOfCountries as $li) {
+                    $countries[] = $li->find('a')->text;
+                }
+
+                return $countries;
+                break;
 
             default:
                 return "";
@@ -362,15 +364,14 @@ class HtmlPieces
     /**
      * Attempt to extract text using an array of match patterns
      *
-     * @param  object $page
-     * @param  array  $patterns
+     * @param object $page
+     * @param array $patterns
      * @return string
      */
     public function findMatchInPatterns(object $dom, object $page, array $patterns, string $type = "text")
     {
         $str = "";
-        foreach ($patterns as $pattern)
-        {
+        foreach ($patterns as $pattern) {
             if ($type === "src") {
                 $el = $dom->find($page, $pattern);
                 $str = $this->count($el) > 0 ? $el->getAttribute("src") : "";
@@ -428,8 +429,7 @@ class HtmlPieces
         // '/yyxxxxxxx'
         preg_match('/\/[A-Za-z]{2}[0-9]+/', $str, $imdbIds);
         $id = substr($imdbIds[0], 1);
-        if ($id == NULL)
-        {
+        if ($id == NULL) {
             $id = "";
         }
         return $id;
@@ -445,7 +445,7 @@ class HtmlPieces
      */
     public function strClean($string)
     {
-        return empty($string) ? "" : str_replace(chr(194).chr(160), '', html_entity_decode(trim($string), ENT_QUOTES));
+        return empty($string) ? "" : str_replace(chr(194) . chr(160), '', html_entity_decode(trim($string), ENT_QUOTES));
     }
 
     /**

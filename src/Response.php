@@ -83,7 +83,8 @@ class Response
                     "tvShow" => false,
                     "cast" => [],
                     "seasons" => [],
-                    "technical_specs" => []
+                    "technical_specs" => [],
+                    "countries" => []
                 ];
                 break;
 

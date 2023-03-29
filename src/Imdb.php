@@ -106,6 +106,7 @@ class Imdb
         $response->add("trailer", $htmlPieces->get($page, "trailer"));
         $response->add("tvShow",  $htmlPieces->get($page, "tvShow"));
         $response->add("cast", $htmlPieces->get($page, "cast"));
+        $response->add("countries",  $htmlPieces->get($page, 'countries'));
         $response->add("seasons",  []);
         $response->add("technical_specs",  []);
 
