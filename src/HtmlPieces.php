@@ -28,7 +28,7 @@ class HtmlPieces
 
         switch ($element) {
             case "title":
-                $patterns = ["h1[data-testid=hero-title-block__title]", ".title_wrapper h1"];
+                $patterns = ["h1[data-testid=hero-title-block__title]", ".title_wrapper h1", "h1[data-testid=hero__pageTitle] span", "h2[data-testid=subtitle]"];
                 $title = $this->findMatchInPatterns($dom, $page, $patterns);
 
                 return $this->strClean($title);
@@ -108,11 +108,9 @@ class HtmlPieces
                 break;
 
             case "rating_votes":
-                $patterns = ["[class*=TotalRatingAmount]", ".ratings_wrapper span[itemprop=ratingCount]"];
+                $patterns = [".gZKrvZ", ".frEfSL"];
                 $rating_votes = $this->findMatchInPatterns($dom, $page, $patterns);
-                $rating_votes = $this->unwrapFormattedNumber($rating_votes);
-
-                return preg_replace("/[^0-9]/", "", $this->strClean($rating_votes));
+                return $this->strClean($rating_votes);
                 break;
 
             case "poster":
@@ -245,7 +243,7 @@ class HtmlPieces
                 break;
 
             case "tvShow":
-                preg_match('/TV Series/i', $page, $matches, PREG_OFFSET_CAPTURE);
+                preg_match('/(TV Series|TV Mini Series)/i', $page, $matches);
                 return !!$this->count($matches);
                 break;
 
