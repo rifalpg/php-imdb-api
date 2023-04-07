@@ -348,7 +348,10 @@ class HtmlPieces
                 $countries = [];
                 $liOfCountries = $dom->find($page, '[li[data-testid="title-details-origin"] > div > ul > li');
                 foreach ($liOfCountries as $li) {
-                    $countries[] = $li->find('a')->text;
+                    $country = $li->find('a')->text;
+                    if(!empty($country)){
+                        $countries[] = $country;
+                    }
                 }
 
                 return $countries;
