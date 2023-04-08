@@ -110,6 +110,15 @@ class HtmlPieces
             case "rating_votes":
                 $patterns = [".gZKrvZ", ".frEfSL"];
                 $rating_votes = $this->findMatchInPatterns($dom, $page, $patterns);
+                if (empty($rating_votes)) {
+                    try {
+                        $rating = $dom->find($page, "div[data-testid=hero-rating-bar__aggregate-rating__score]");
+                        $parent = $rating[0]->parent;
+                        $rating_votes = $parent->getChildren()[2]->text;
+                    } catch (\Exception $exception) {
+                        return $rating_votes;
+                    }
+                }
                 return $this->strClean($rating_votes);
                 break;
 
@@ -349,7 +358,7 @@ class HtmlPieces
                 $liOfCountries = $dom->find($page, '[li[data-testid="title-details-origin"] > div > ul > li');
                 foreach ($liOfCountries as $li) {
                     $country = $li->find('a')->text;
-                    if(!empty($country)){
+                    if (!empty($country)) {
                         $countries[] = $country;
                     }
                 }
