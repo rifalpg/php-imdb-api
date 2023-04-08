@@ -113,8 +113,10 @@ class HtmlPieces
                 if (empty($rating_votes)) {
                     try {
                         $rating = $dom->find($page, "div[data-testid=hero-rating-bar__aggregate-rating__score]");
-                        $parent = $rating[0]->parent;
-                        $rating_votes = $parent->getChildren()[2]->text;
+                        if($this->count($rating)){
+                            $parent = $rating[0]->parent;
+                            $rating_votes = $parent->getChildren()[2]->text;
+                        }
                     } catch (\Exception $exception) {
                         return $rating_votes;
                     }
