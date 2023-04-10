@@ -2,12 +2,12 @@
 namespace hmerritt;
 
 /**
-*  Class Imdb
-*
-*
-* @package hmerritt/imdb-api
-* @author Harry Merritt
-*/
+ *  Class Imdb
+ *
+ *
+ * @package hmerritt/imdb-api
+ * @author Harry Merritt
+ */
 class Imdb
 {
 
@@ -103,6 +103,7 @@ class Imdb
         $response->add("rating", $htmlPieces->get($page, "rating"));
         $response->add("rating_votes", $htmlPieces->get($page, "rating_votes"));
         $response->add("poster", $htmlPieces->get($page, "poster"));
+        $response->add("galleries", $htmlPieces->get($page, "galleries"));
         $response->add("trailer", $htmlPieces->get($page, "trailer"));
         $response->add("tvShow",  $htmlPieces->get($page, "tvShow"));
         $response->add("cast", $htmlPieces->get($page, "cast"));
@@ -113,8 +114,8 @@ class Imdb
         //  If techSpecs is enabled in user $options
         //  -> Make a second request to load the full techSpecs page
         if ($options["techSpecs"]) {
-                $page_techSpecs = $dom->fetch("https://www.imdb.com/title/$filmId/technical", $options);
-                $response->add("technical_specs", $htmlPieces->get($page_techSpecs, "technical_specs"));
+            $page_techSpecs = $dom->fetch("https://www.imdb.com/title/$filmId/technical", $options);
+            $response->add("technical_specs", $htmlPieces->get($page_techSpecs, "technical_specs"));
         }
 
         // If seasons is enabled & is a tv show

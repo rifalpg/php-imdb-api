@@ -113,7 +113,7 @@ class HtmlPieces
                 if (empty($rating_votes)) {
                     try {
                         $rating = $dom->find($page, "div[data-testid=hero-rating-bar__aggregate-rating__score]");
-                        if($this->count($rating)){
+                        if ($this->count($rating)) {
                             $parent = $rating[0]->parent;
                             $rating_votes = $parent->getChildren()[2]->text;
                         }
@@ -367,7 +367,18 @@ class HtmlPieces
 
                 return $countries;
                 break;
-
+            case 'galleries':
+                $galleries = [];
+                $imgs = $dom->find($page, ".photos-image div img");
+                foreach ($imgs as $img) {
+                    $srcset = $img->getAttribute('srcset');
+                    if (!empty($srcset)) {
+                        $urls = explode(", ", $srcset);
+                        $url = $urls[count($urls) - 1];
+                        $galleries[] = explode(" ", $url)[0];
+                    }
+                }
+                return $galleries;
             default:
                 return "";
         }

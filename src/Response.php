@@ -2,12 +2,12 @@
 namespace hmerritt;
 
 /**
-*  Class Response
-*
-*
-* @package hmerritt/imdb-api
-* @author Harry Merritt
-*/
+ *  Class Response
+ *
+ *
+ * @package hmerritt/imdb-api
+ * @author Harry Merritt
+ */
 class Response
 {
 
@@ -76,6 +76,7 @@ class Response
                     "rating" => "",
                     "rating_votes" => "",
                     "poster" => "",
+                    "galleries" => [],
                     "trailer" => [
                         "id" => "",
                         "link" => ""
